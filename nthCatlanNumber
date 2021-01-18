@@ -1,0 +1,31 @@
+package tictactoe
+
+/*Nth catlan number
+*
+* catlan number is a series that solv many problem like
+*
+* 1) Count the number of expressions containing n pairs of parentheses which are correctly matched. For n = 3, possible expressions are ((())), ()(()), ()()(), (())(), (()()).
+2) Count the number of possible Binary Search Trees with n keys (See this)
+3) Count the number of full binary trees (A rooted binary tree is full if every vertex has either two children or no children) with n+1 leaves.
+4) Given a number n, return the number of ways you can draw n chords in a circle with 2 x n points such that no 2 chords intersect.
+* there are many others
+* f(0) =1 f(1) =1 and f(n) = summation from i =0 to N of f(i)*f(n-1)
+* there is one foprmula for nth catlan number = (1/n+1)* 2nCn */
+
+fun printNthCatlanNumber(n : Int) {
+
+   val arr = IntArray(100)
+    arr[0] =1
+    arr[1] =1
+    for (i in 2 .. n) {
+        arr[i] =0
+        for (j in 0 .. i-1) {
+            arr[i] = arr[i] + (arr[j] * arr[i-j-1])
+        }
+    }
+    print(arr[n])
+}
+
+fun main() {
+printNthCatlanNumber(5)
+}
