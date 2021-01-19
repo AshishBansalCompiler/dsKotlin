@@ -1,0 +1,49 @@
+package tictactoe
+
+import kotlin.math.min
+
+/*
+A binomial co is chossing a set of number from other set.
+choosing k numbers from n set is written as nck
+it is = factorial(n)/ (factorial(k) * factorial(n-k))
+nck is equal to nc(n-k)
+
+c(n,k) = c(n-1, k-1) + c(n-1, k)
+c(n, 0) = c(n,n) = 1
+* */
+
+
+/* recursive solution */
+
+fun recurBinomial(n : Int, k : Int) : Int {
+
+    if (k > n) {
+        return 0
+    }
+    if (k == 0 || k == n) {
+        return 1
+    }
+    return recurBinomial(n-1, k-1) + recurBinomial(n-1,k)
+}
+
+fun BinomailDP(n: Int, k : Int) : Int {
+
+    val arr: Array<IntArray> = Array(n+1) { IntArray(k+1) }
+
+    for (i in 0 .. n) {
+        for (j in 0 .. min(i,k)) {
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            }
+            else
+                arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j];
+        }
+    }
+    return arr[n][k]
+
+}
+
+fun main() {
+    //print(recurBinomial(5,2))
+    print(BinomailDP(5,2))
+}
