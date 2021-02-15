@@ -1,0 +1,49 @@
+package tictactoe
+
+/*Largest divisible pairs subset
+* Given an array of n distinct elements, find length of the largest subset such that every pair in the subset is such that the larger element of the pair is divisible by smaller element.
+Examples:
+
+
+Input : arr[] = {10, 5, 3, 15, 20}
+Output : 3
+Explanation: The largest subset is 10, 5, 20.
+10 is divisible by 5, and 20 is divisible by 10.
+
+Input : arr[] = {18, 1, 3, 6, 13, 17}
+Output : 4
+Explanation: The largest subset is 18, 1, 3, 6,
+In the subsequence, 3 is divisible by 1,
+6 by 3 and 18 by 6.
+*
+*
+* This problem is same as LIS (largest increasing subsequence)
+* basically if a%b = 0 and b%c = 0 then its true that a%c will also be 0
+*
+* sort the array and apply LIS it will give result
+* */
+
+
+fun DPLargestSubDIVisibleSubSet(array : IntArray, n : Int) : Int {
+// 1,3,6,13,17,18
+    var max = 1
+    array.sort()
+    val dpAray = IntArray(array.size){1}
+
+    for (i in 1 .. n-1) {
+        for (j in 0 until i) {
+            if (array[i] % array[j] == 0 && dpAray[i] < dpAray[j]+1) {
+                dpAray[i] = dpAray[j] + 1
+                if (max < dpAray[i]) {
+                    max = dpAray[i]
+                }
+            }
+        }
+    }
+    return max
+}
+
+fun main() {
+    val aa = intArrayOf(18, 1, 3, 6, 13, 17)
+    print(DPLargestSubDIVisibleSubSet(aa,aa.size))
+}
