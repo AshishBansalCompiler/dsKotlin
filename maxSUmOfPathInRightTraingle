@@ -1,0 +1,34 @@
+package tictactoe
+
+import kotlin.math.max
+
+fun calculateRec(aa: Array<IntArray>, row : Int, start : Int, col : Int, n: Int) : Int{
+    if (row <= 0) {
+        return 0
+    }
+    var p =0
+    var q =0
+    if (start < n) {
+        p = aa[start][col] + calculateRec(aa,row-1, start+1, col, n)
+    }
+
+    if (col < n) {
+        q = aa[start][col] + calculateRec(aa, row-1, start+1, col+1, n)
+    }
+
+    return max(p,q)
+}
+
+fun dpSolutionForRightTragngle(aa: Array<IntArray>) {
+   // print(aa.size)
+    //print(aa[0].size)
+}
+
+
+fun main() {
+    //val aa = arrayOf(intArrayOf(1), intArrayOf(1,2), intArrayOf(4,1,2), intArrayOf(2,3,1,1))
+    val aa = arrayOf(intArrayOf(3), intArrayOf(7,5), intArrayOf(2,4,5), intArrayOf(7,5,9,3))
+    //val aa = arrayOf(intArrayOf(2), intArrayOf(4,1), intArrayOf(1,2,7))
+    print(calculateRec(aa, 4, 0, 0, 4))
+    dpSolutionForRightTragngle(aa)
+}
