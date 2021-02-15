@@ -1,0 +1,49 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Given an array of positive numbers, find the maximum sum of a subsequence with the constraint that no 2 numbers in the sequence should be adjacent in the array. So 3 2 7 10 should return 13 (sum of 3 and 10) or 3 2 5 10 7 should return 15 (sum of 3, 5 and 7).Answer the question in most efficient way.
+
+Examples :
+
+Input : arr[] = {5, 5, 10, 100, 10, 5}
+Output : 110
+
+Input : arr[] = {1, 2, 3}
+Output : 4
+
+Input : arr[] = {1, 20, 3}
+Output : 20
+
+*/
+
+fun maxSumSuchThatNoTwoElementIsAdjcent(array : Array<Int>, n : Int) : Int{
+    if (n < 0) {
+        return 0
+    }
+    val include = array[n] + maxSumSuchThatNoTwoElementIsAdjcent(array, n-2)
+    var exclude = 0
+    if (n-1 >= 0)
+     exclude = array[n-1] + maxSumSuchThatNoTwoElementIsAdjcent(array, n-3)
+    return max(include, exclude)
+}
+
+fun DpSolutionofmaxSumNoAdjcent(array : Array<Int>, n : Int) :  Int {
+    if (n == 0) {
+        return 0
+    }
+    var inc = array[0]
+    var exl = 0
+    for (i in 1 until n) {
+        var temp = max(inc, exl)
+        inc = exl + array[i]
+        exl = temp
+    }
+    return max(inc, exl)
+}
+
+fun main() {
+    val array = arrayOf(5, 5, 10, 100, 10, 5)
+    //val array = arrayOf(1,20,3)
+    print(maxSumSuchThatNoTwoElementIsAdjcent(array, array.size-1))
+}
