@@ -1,0 +1,77 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Cutting a Rod
+*
+* Given a rod of length n inches and an array of prices that contains
+* prices of all pieces of size smaller than n. Determine the
+* maximum value obtainable by cutting up the rod and selling the pieces.
+* For example, if length of the rod is 8 and the values of different
+* pieces are given as following, then the maximum obtainable value is 22
+* (by cutting in two pieces of lengths 2 and 6)
+
+length   | 1   2   3   4   5   6   7   8
+--------------------------------------------
+price    | 1   5   8   9  10  17  17  20
+And if the prices are as following, then the maximum obtainable value is 24 (by cutting in eight pieces of length 1)
+
+length   | 1   2   3   4   5   6   7   8
+--------------------------------------------
+price    | 3   5   8   9  10  17  17  20
+*
+* */
+
+fun CuttingRoad(n : Int, priceArray: IntArray, size : Int) : Int {
+
+    if (n<=0) {
+        return 0
+    }
+    if (size <= 0) {
+        return 0
+    }
+    var include = 0
+    if (n >= size) {
+      include   = priceArray[size - 1] + CuttingRoad(n - size, priceArray, size)
+    }
+    val exclude = CuttingRoad(n, priceArray, size-1)
+    return max(include, exclude)
+}
+
+fun DPCuttingRoad(array: IntArray, lenthArray: IntArray, maxLen :Int, n :Int) : Int{
+    if (n<=0 || maxLen <= 0) {
+        return 0
+    }
+    val table = Array(n+1){IntArray(n+1)} // size vs length of road
+    for (i in 0 until n) {
+        table[0][i] = 0
+        table[i][0] =0
+    }
+    for (i in 1 .. n) {
+        for(j in 1 .. n) {
+            if (j >= i) {  // if length of road is bigger then current size, means we can cut it
+                table[i][j] = max(table[i-1][j],array[i-1] + table[i][j-i])
+            }
+            else {
+                table[i][j] = table[i-1][j]
+            }
+        }
+    }
+    for (i in 0  .. n) {
+        for (j in 0 .. n) {
+            print(table[i][j])
+            print(" ")
+        }
+        println()
+    }
+    return table[n][n]
+}
+
+fun main() {
+    val array = intArrayOf(1,5,8,9, 10, 17, 17 ,20)
+    //val array = intArrayOf(3,5,8,9, 10, 17, 17 ,20)
+   // print(CuttingRoad(8, array, 8))
+
+    val lenthArray = IntArray(array.size){it+1}
+    print(DPCuttingRoad(array, lenthArray, 8, array.size))
+}
