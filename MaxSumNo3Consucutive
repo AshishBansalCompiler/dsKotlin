@@ -1,0 +1,70 @@
+package tictactoe
+
+import kotlin.math.max
+
+class MaxSumNo3Conssucutive(val array: IntArray) {
+
+    var length =0
+    init {
+         length = array.size
+    }
+
+
+    fun calculateSumRecur(n : Int) : Int {
+        if (n <= 0 ){
+            return 0
+        }
+        if (n==2) {
+            return array[n-1] + array[n-2]
+        }
+        if (n == 1) {
+            return array[n-1]
+        }
+        return max(calculateSumRecur(n-1), max(array[n-1] + calculateSumRecur(n-2), array[n-1]+ array[n-2]+calculateSumRecur(n-3)))
+    }
+
+    fun calculateSum() : Int {
+        return calculateSumRecur(length)
+    }
+
+    // DP solution
+    // sum[i] will store sum of non 3 consucitive sum till ith index
+    // sum[0] = a[0]
+    // sum[1] = sum[0] + sum[1]
+    // sum[2]  we have two option either sum[2] = sum[1] or sum[2] = a[2] + a[0] or a[2] + a[1]
+
+
+    fun maxSumWO3Consec(arr: IntArray, n: Int): Int {
+        // Stores result for subarray arr[0..i], i.e.,
+        // maximum possible sum in subarray arr[0..i]
+        // such that no three elements are consecutive.
+        val sum = IntArray(n)
+
+        // Base cases (process first three elements)
+        if (n >= 1) sum[0] = arr[0]
+        if (n >= 2) sum[1] = arr[0] + arr[1]
+        if (n > 2) sum[2] = Math.max(sum[1], Math.max(arr[1] + arr[2], arr[0] + arr[2]))
+
+        // Process rest of the elements
+        // We have three cases
+        // 1) Exclude arr[i], i.e., sum[i] = sum[i-1]
+        // 2) Exclude arr[i-1], i.e., sum[i] = sum[i-2] + arr[i]
+        // 3) Exclude arr[i-2], i.e., sum[i-3] + arr[i] + arr[i-1]
+        for (i in 3 until n) sum[i] = Math.max(
+            Math.max(sum[i - 1], sum[i - 2] + arr[i]),
+            arr[i] + arr[i - 1] + sum[i - 3]
+        )
+        return sum[n - 1]
+    }
+
+    fun dPSolution() :  Int {
+        return maxSumWO3Consec(array, length)
+    }
+}
+
+fun main() {
+    val aa = intArrayOf(100, 1000, 100, 1000, 1)
+    val maxSumNo3Conssucutive = MaxSumNo3Conssucutive(aa)
+    println(maxSumNo3Conssucutive.calculateSum())
+    print(maxSumNo3Conssucutive.dPSolution())
+}
