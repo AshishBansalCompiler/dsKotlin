@@ -1,0 +1,62 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*
+Given a rectangular grid of dimension 2 x n. We need to find out the maximum sum such that no two chosen numbers are adjacent, vertically, diagonally or horizontally.
+Examples:
+
+Input: 1 4 5
+       2 0 0
+Output: 7
+If we start from 1 then we can add only 5 or 0.
+So max_sum = 6 in this case.
+If we select 2 then also we can add only 5 or 0.
+So max_sum = 7 in this case.
+If we select from 4 or 0  then there is no further
+elements can be added.
+So, Max sum is 7.
+
+Input: 1 2 3 4 5
+       6 7 8 9 10
+Output: 24
+
+*/
+
+fun getMaxSumIn2N(array : Array<Array<Int>>, rows : Int, col :Int) : Int {
+
+    if (col < 0) {
+        return 0
+    }
+    if (col == 0 ) {
+        return max(array[0][0], array[1][0])
+    }
+    var inc = max(array[0][col], array[1][col]) + getMaxSumIn2N(array, rows, col-2)
+    var exc = max(array[0][col-1], array[1][col-1]) + getMaxSumIn2N(array, rows, col-4)
+
+    return max(inc, exc)
+
+}
+
+fun dpSolutionFOrMAxSumin2Dgrid(array: Array<Array<Int>>, rows: Int, col: Int) : Int {
+    if (col < 0) {
+        return 0
+    }
+    var incl = max(array[0][0], array[1][0])
+    var exl = 0
+    for (i in 1 .. col) {
+        var temp = max(incl,exl)
+        incl = exl + max(array[0][i], array[1][i])
+        exl = temp
+    }
+    return max(incl,exl)
+}
+
+fun main() {
+    /*val array = arrayOf(arrayOf(1,4,5),
+                        arrayOf(2, 0,0))*/
+    val array = arrayOf(arrayOf(1,2,3,4,5),
+        arrayOf(6,7,8,9,10))
+    print(getMaxSumIn2N(array, array.size-1, array[0].size-1))
+    print(dpSolutionFOrMAxSumin2Dgrid(array, array.size-1, array[0].size-1))
+}
