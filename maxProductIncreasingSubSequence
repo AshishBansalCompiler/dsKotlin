@@ -1,0 +1,28 @@
+package tictactoe
+
+import kotlin.math.max
+
+fun maximumProductIncreasingSub(aa : IntArray) {
+    val tt = IntArray(aa.size)
+    val n = aa.size
+    tt[0] = aa[0]
+    for (i in 1 until n) {
+        tt[i] = aa[i]
+        for (j in 0 until i) {
+            if (aa[i] > aa[j] && tt[i] < tt[j] * aa[i]) {
+                tt[i] = tt[j] * aa[i]
+            }
+        }
+    }
+    var max = tt[0]
+    for (i in 1 .. n-1) {
+        max = max(max, tt[i])
+    }
+    println(max)
+}
+
+fun main() {
+    //val aa = intArrayOf(1, 101, 2, 3, 100, 4, 5)
+    val aa = intArrayOf(3, 100, 4, 5, 150, 6)
+    maximumProductIncreasingSub(aa)
+}
