@@ -1,0 +1,62 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Given a N X N matrix Mat[N][N] of positive integers. There are only three possible moves from a cell (i, j)
+
+(i+1, j)
+(i+1, j-1)
+(i+1, j+1)
+Starting from any column in row 0, return the largest sum of any of the paths up to row N-1.
+
+Examples:
+
+Input : mat[4][4] = { {4, 2, 3, 4},
+                      {2, 9, 1, 10},
+                      {15, 1, 3, 0},
+                      {16, 92, 41, 44} };
+Output :120
+path : 4 + 9 + 15 + 92 = 120
+
+*/
+
+fun maxSum(array: Array<Array<Int>>) {
+    val rows = array.size
+    val col = array[0].size
+    val temp = Array(rows){IntArray(col)}
+    temp[0][0] = array[0][0]
+    for (i in 1 until col) {
+        temp[0][i] = array[0][i]
+    }
+
+    for (i in 1 until rows) {
+        for (j in 0 until col) {
+            var first = temp[i-1][j]
+            var second = 0
+            var third = 0
+            if (j > 0) {
+                second = temp[i-1][j-1]
+            }
+            if (j < col-1) {
+                third =  temp[i-1][j+1]
+            }
+            temp[i][j] = max(max(first, second), third) + array[i][j]
+
+        }
+    }
+
+    var maxi = temp[rows-1][0]
+    for (i in 1 until col) {
+        maxi = max(maxi, temp[rows-1][i])
+    }
+    println(maxi)
+}
+
+fun main() {
+
+    val array = arrayOf(arrayOf(4, 2, 3, 4),
+                        arrayOf(2, 9, 1, 10),
+                        arrayOf(15, 1, 3, 0),
+                        arrayOf(16, 92, 41, 44))
+    maxSum(array)
+}
