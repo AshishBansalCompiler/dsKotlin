@@ -1,0 +1,83 @@
+package tictactoe
+
+import kotlin.math.min
+import kotlin.math.sign
+
+/*You are given a bag of size W kg and you are provided costs of packets different weights of oranges in array cost[] where cost[i] is basically the cost of ‘i’ kg packet of oranges. Where cost[i] = -1 means that ‘i’ kg packet of orange is unavailable
+Find the minimum total cost to buy exactly W kg oranges and if it is not possible to buy exactly W kg oranges then print -1. It may be assumed that there is an infinite supply of all available packet types.
+Note: array starts from index 1.
+
+Examples:
+
+Input  : W = 5, cost[] = {20, 10, 4, 50, 100}
+Output : 14
+We can choose two oranges to minimize cost. First
+orange of 2Kg and cost 10. Second orange of 3Kg
+and cost 4.
+
+Input  : W = 5, cost[] = {1, 10, 4, 50, 100}
+Output : 5
+We can choose five oranges of weight 1 kg.
+
+*/
+
+fun mincosewithDefineWeight(array: Array<Int>, weight : Int, n : Int) : Int {
+
+    if (n <= 0) {
+        return Int.MAX_VALUE
+    }
+    if (weight <= 0) {
+        return 0
+    }
+    var include = if (weight >= n && array[n-1] != -1)
+     array[n-1] + mincosewithDefineWeight(array, weight - n, n)  else Int.MAX_VALUE
+    var exclude = mincosewithDefineWeight(array, weight, n-1)
+    val result =  min(include, exclude)
+    if (result == Int.MAX_VALUE) {
+        return -1
+    } else {
+        return result
+    }
+}
+
+fun dpmincosttofillbag(array: Array<Int>, weight: Int) {
+
+    val rows = array.size
+    val temp = Array(rows+1){IntArray(weight +1)}
+
+    for (i in 0 .. weight) {
+        temp[0][i] = 0
+    }
+    for (i in 0 .. rows) {
+        temp[i][0] = Int.MAX_VALUE
+    }
+    for (i in 1 .. rows) {
+        for (j in 1 .. weight) {
+            temp[i][j] = Int.MAX_VALUE
+            if (array[j-1] != -1) {
+                var inc = Int.MAX_VALUE
+                if (j <=i ) {
+                    inc = array[j-1] + temp[i-j][j]
+
+                }
+                val exl = temp[i][j-1]
+                temp[i][j] = min(inc, exl)
+            }
+
+
+        }
+    }
+    val minimum = temp[rows][weight]
+    print(if (minimum == Int.MAX_VALUE) -1 else minimum)
+
+}
+
+
+fun main() {
+    val array = arrayOf(20, 10, 4, 50, 100)
+   //val array = arrayOf(1, 10, 4, 50, 100)
+   //val array = arrayOf(1, 2, 3, 4, 5)
+   // val array = arrayOf(-1, -1, 4, 5, -1)
+   // println(mincosewithDefineWeight(array, 5, array.size))
+    dpmincosttofillbag(array, 5)
+}
