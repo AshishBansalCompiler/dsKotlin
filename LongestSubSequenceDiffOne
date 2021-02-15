@@ -1,0 +1,43 @@
+package tictactoe
+
+import kotlin.math.abs
+import kotlin.math.max
+
+/*iven an array of n size, the task is to find the longest subsequence such that difference between adjacents is one.
+
+Examples:
+
+Input :  arr[] = {10, 9, 4, 5, 4, 8, 6}
+Output :  3
+As longest subsequences with difference 1 are, "10, 9, 8",
+"4, 5, 4" and "4, 5, 6"
+
+Input :  arr[] = {1, 2, 3, 2, 3, 7, 2, 1}
+Output :  7
+As longest consecutive sequence is "1, 2, 3, 2, 3, 2, 1"
+
+*/
+
+fun longestSubSequenceWithDifferenceOne(aa : IntArray) {
+    val tt = IntArray(aa.size)
+    tt[0] = 1
+    for (i in 1 until aa.size) {
+        tt[i] = 1
+        for (j in 0 until i) {
+            if (abs(aa[i]-aa[j]) == 1 && tt[i] < tt[j] + 1) {
+                tt[i] = tt[j] + 1
+            }
+        }
+    }
+    var ma = tt[0]
+    for (i in 1 until aa.size) {
+        ma = max(ma, tt[i])
+    }
+    print(ma)
+}
+
+fun main() {
+    //val aa = intArrayOf(10, 9, 4, 5, 4, 8, 6)
+    val aa = intArrayOf(1, 2, 3, 2, 3, 7, 2, 1)
+    longestSubSequenceWithDifferenceOne(aa)
+}
