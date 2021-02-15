@@ -1,0 +1,44 @@
+package tictactoe
+
+import kotlin.math.max
+
+
+fun longestRepeatingSubSequence(str : String) : String {
+    val aa = Array(str.length+1){IntArray(str.length+1)}
+    for (i in 0 .. str.length) {
+        for (j in 0 .. str.length) {
+
+            if (i == 0 || j == 0) {
+             aa[i][j] = 0
+            }
+            else if (str[i-1] == str[j-1] && i != j) {
+                aa[i][j] = aa[i-1][j-1] +1
+            } else {
+                aa[i][j] = max(aa[i-1][j], aa[i][j-1])
+            }
+        }
+    }
+
+    // we got the length in aa[str.length][str.length]
+    var str1 = ""
+    var i = str.length
+    var j = str.length
+    while (i > 0 && j >0) {
+        if (aa[i][j] == aa[i-1][j-1] +1) {
+            str1 += str[i-1]
+            i--
+            j--
+        } else if (aa[i][j] == aa[i-1][j]){
+            i--
+        } else {
+            j--
+        }
+    }
+    val temp = str1.reversed()
+    return temp
+}
+
+fun main() {
+    val str = "AABEBCDD"
+    print(longestRepeatingSubSequence(str))
+}
