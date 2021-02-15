@@ -1,0 +1,58 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Given an array of integers. A subsequence of arr[] is called Bitonic if it is first increasing, then decreasing.
+
+Examples :
+
+Input : arr[] = {1, 15, 51, 45, 33,
+                   100, 12, 18, 9}
+Output : 194
+Explanation : Bi-tonic Sub-sequence are :
+             {1, 51, 9} or {1, 50, 100, 18, 9} or
+             {1, 15, 51, 100, 18, 9}  or
+             {1, 15, 45, 100, 12, 9}  or
+             {1, 15, 45, 100, 18, 9} .. so on
+Maximum sum Bi-tonic sub-sequence is 1 + 15 +
+51 + 100 + 18 + 9 = 194
+
+Input : arr[] = {80, 60, 30, 40, 20, 10}
+Output : 210
+
+*/
+
+
+fun maximumSumBiotonic(aa : IntArray) {
+    val incSum = IntArray(aa.size)
+    val decSum = IntArray(aa.size)
+    val n = aa.size
+    incSum[0] = aa[0]
+    decSum[n-1] = aa[n-1]
+    for (i in 1 until n) {
+        incSum[i] = aa[i]
+        for (j in 0 until i) {
+            if (aa[i] > aa[j] && incSum[i] < incSum[j]+aa[i]) {
+                incSum[i] = incSum[j] + aa[i]
+            }
+        }
+
+    }
+    for (i in n-2 downTo  0) {
+        decSum[i] = aa[i]
+        for (j in n-1 downTo i+1)
+        if (aa[i] > aa[j] && decSum[i] < decSum[j]+aa[i]) {
+            decSum[i] = decSum[j] + aa[i]
+        }
+    }
+    var max = incSum[0] + decSum[0] -aa[0]
+    for (i in 1 until n) {
+        max = max(max, incSum[i] + decSum[i] - aa[i])
+    }
+    println(max)
+}
+
+fun main() {
+    val aa = intArrayOf(1, 15, 51, 45, 33, 100, 12, 18, 9)
+    maximumSumBiotonic(aa)
+}
