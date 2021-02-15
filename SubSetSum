@@ -1,0 +1,73 @@
+package tictactoe
+
+import com.sun.org.apache.xpath.internal.operations.Bool
+
+/*Subset Sum problem
+* Given a set of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum.
+
+Example:
+
+Input: set[] = {3, 34, 4, 12, 5, 2}, sum = 9
+Output: True
+There is a subset (4, 5) with sum 9.
+
+Input: set[] = {3, 34, 4, 12, 5, 2}, sum = 30
+Output: False
+There is no subset that add up to 30.
+*
+* */
+
+fun subsetSum(array: IntArray, currSum : Int, length : Int) : Boolean {
+    if (currSum == 0) {
+        return true
+    }
+    if (currSum < 0) {
+        return false
+    }
+    if(length <=0 && currSum > 0) {
+        return false
+    }
+    return subsetSum(array, currSum, length-1) || subsetSum(array, currSum-array[length-1],length-1)
+}
+
+fun dpSubSetSum(array: IntArray, currSum : Int, length : Int) {
+    val aa = Array(length+1){BooleanArray(currSum+1)}
+    aa[0][0] = true
+    for (i in 1 .. currSum) {
+        aa[0][i] = false
+    }
+    for (i in 1.. length) {
+        for (j in 0 .. currSum) {
+            if (j == 0) {
+                aa[i][j] = true
+            } else {
+                if(j >= array[i-1])
+                aa[i][j] = aa[i-1][j] || aa[i-1][j-array[i-1]]
+                else
+                    aa[i][j] = aa[i-1][j]
+            }
+
+        }
+    }
+    print(aa[length][currSum])
+}
+
+fun main() {
+   /* val aa = IntArray(6)
+    aa[0] = 3
+    aa[1] = 34
+    aa[2] = 4
+    aa[3] = 12
+    aa[4] = 5
+    aa[5] = 2
+    //print(subsetSum(aa, 30, aa.size))
+    dpSubSetSum(aa, 9, aa.size)
+*/
+    val aa = IntArray(4)
+    aa[0] = 3
+    aa[1] = 4
+    aa[2] = 5
+    aa[3] = 2
+    //print(subsetSum(aa, 30, aa.size))
+    dpSubSetSum(aa, 6, aa.size)
+}
