@@ -1,0 +1,59 @@
+package tictactoe
+
+import kotlin.math.max
+import kotlin.math.min
+
+/*Given a binary matrix, find out the maximum size square sub-matrix with all 1s.
+
+For example, consider the below binary matrix.
+maximum-size-square-sub-matrix-with-all-1s
+https://www.geeksforgeeks.org/maximum-size-sub-matrix-with-all-1s-in-a-binary-matrix/
+*/
+
+fun printmaximumSizeSubMatrix(aa : Array<Array<Int>>) {
+
+    val rows = aa.size
+    val col = aa[0].size
+    var max = 0
+    val temp = Array(rows){IntArray(col)}
+    for (i in 0 until rows) {
+        temp[i][0] = aa[i][0]
+    }
+    for (j in 0 until col) {
+        temp[0][j] = aa[0][j]
+    }
+    for (i in 1 until rows) {
+        for (j in 1 until col) {
+            if (aa[i][j] == 1) {
+                temp[i][j] = min(min(temp[i][j-1], temp[i-1][j]), temp[i-1][j-1]) + 1
+                max = max(max, temp[i][j])
+            } else {
+                temp[i][j] = 0
+            }
+        }
+    }
+    /*for (i in 0 until rows) {
+        for (j in 0 until col) {
+            print(temp[i][j])
+        }
+        println()
+    }*/
+
+    for (i in max downTo 1) {
+        for (j in max downTo 1) {
+            print("1 ")
+        }
+        println()
+    }
+}
+
+fun main() {
+
+    val array = arrayOf(arrayOf(0,1,1,0,1),
+                        arrayOf(1,1,0,1,0),
+                        arrayOf(0,1,1,1,0),
+                        arrayOf(1,1,1,1,0),
+                        arrayOf(1,1,1,1,1),
+                        arrayOf(0,0,0,0,0))
+    printmaximumSizeSubMatrix(array)
+}
