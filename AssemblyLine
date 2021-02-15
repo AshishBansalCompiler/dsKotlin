@@ -1,0 +1,103 @@
+package tictactoe
+
+import kotlin.math.min
+
+/*A car factory has two assembly lines, each with n stations.
+A station is denoted by Si,j where i is either 1 or 2 and indicates
+the assembly line the station is on, and j indicates the number of the station.
+The time taken per station is denoted by ai,j. Each station is dedicated to
+some sort of work like engine fitting, body fitting, painting, and so on.
+So, a car chassis must pass through each of the n stations in order before
+exiting the factory. The parallel stations of the two assembly lines perform
+the same task. After it passes through station Si,j, it will continue
+to station Si,j+1 unless it decides to transfer to the other line.
+Continuing on the same line incurs no extra cost, but transferring from line i at
+station j – 1 to station j on the other line takes time ti,j. Each assembly line
+takes an entry time ei and exit time xi which may be different for the two lines.
+Give an algorithm for computing the minimum time it will take to build a car chassis.
+
+we have two option at every station either go to next on same line or go to next on other line with extra cose
+minimum of both will be answer
+
+*/
+
+/*input will be station array and cose array and cost of transfer  entry array exit array*/
+
+val timeTakenByStation = Array(2){IntArray(4)}
+val transferArray =  Array(2){IntArray(4)}
+val entryArray = arrayOf(10,12)
+val exitArray = arrayOf(18,7)
+val n = 4
+
+fun minimumCast(currentLine : Int, currentStation : Int) : Int{
+
+    // for each case we have two option either go in straight line or transfer
+    if (currentStation > n) {
+        return 0
+    }
+    if (currentStation == n) {
+        return exitArray[currentLine]
+    }
+if (currentLine == 0) {
+    val T1 = minimumCast(0, currentStation+1)
+    if (currentStation < n-1) {
+        return timeTakenByStation[0][currentStation] + min(T1, transferArray[0][currentStation+1] + minimumCast(1, currentStation+1))
+
+    } else
+        return timeTakenByStation[0][currentStation] + T1
+} else  {
+    val T2 = minimumCast(1, currentStation+1)
+    if (currentStation < n-1) {
+        return timeTakenByStation[1][currentStation] + min(T2,transferArray[1][currentStation+1] + minimumCast(0, currentStation+1))
+    } else
+        return timeTakenByStation[1][currentStation] + T2
+}
+
+}
+
+fun minimumCostDP() : Int {
+    // two array T1 and T2
+
+    val T1 = IntArray(n)
+    val T2 = IntArray(n)
+
+    T1[0] = entryArray[0] + timeTakenByStation[0][0]
+    T2[0] = entryArray[1] + timeTakenByStation[1][0]
+
+    for (i in 1 until n) {
+
+        T1[i] = min(T1[i-1] + timeTakenByStation[0][i] , T2[i-1] + transferArray[1][i] + timeTakenByStation[0][i])
+        T2[i] = min(T2[i-1] + timeTakenByStation[1][i], T1[i-1] + transferArray[0][i] + timeTakenByStation[1][i])
+    }
+    return min(T1[n-1] + exitArray[0], T2[n-1] + exitArray[1])
+}
+
+fun main() {
+
+    // 2D array to mention about time taken by each
+   // val timeTakenByStation = Array(2){IntArray(4)}
+    //val transferArray =  Array(2){IntArray(4)}
+    timeTakenByStation[0][0] = 4
+    timeTakenByStation[0][1] = 5
+    timeTakenByStation[0][2] = 3
+    timeTakenByStation[0][3] = 2
+    timeTakenByStation[1][0] = 2
+    timeTakenByStation[1][1] = 10
+    timeTakenByStation[1][2] = 1
+    timeTakenByStation[1][3] = 4
+
+    transferArray[0][0] = 0
+    transferArray[0][1] = 7
+    transferArray[0][2] = 4
+    transferArray[0][3] = 5
+    transferArray[1][0] = 0
+    transferArray[1][1] = 9
+    transferArray[1][2] = 2
+    transferArray[1][3] = 8
+
+   // val entryArray = arrayOf(10,12)
+    //val exitArray = arrayOf(18,7)
+    val p =min(entryArray[0] + minimumCast(0,0), entryArray[1] + minimumCast( 1, 0))
+    println(p)
+    print(minimumCostDP())
+}
