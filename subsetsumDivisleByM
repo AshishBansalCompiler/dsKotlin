@@ -1,0 +1,71 @@
+package tictactoe
+
+/*Subset with sum divisible by m
+
+* Given a set of non-negative distinct integers, and a value m, determine if there is a subset of the given set with sum divisible by m.
+Input Constraints
+Size of set i.e., n <= 1000000, m <= 1000
+
+Examples:
+
+Input : arr[] = {3, 1, 7, 5};
+        m = 6;
+Output : YES
+
+Input : arr[] = {1, 6};
+        m = 5;
+Output : NO
+
+This problem is a variant of subset sum problem. In subset sum problem we check if given sum subset exist or not, here we need to find if there exist some subset with sum divisible by m or not. Seeing input constraint, it looks like typical DP solution will work in O(nm) time. But in tight time limits in competitive programming, the solution may work. Also auxiliary space is high for DP table, but here is catch.
+
+If n > m there will always be a subset with sum divisible by m (which is easy to prove with pigeonhole principle). So we need to handle only cases of n <= m .
+For n <= m we create a boolean DP table which will store the status of each value from 0 to m-1 which are possible subset sum (modulo m) which have been encountered so far.
+
+Now we loop through each element of given array arr[], and we add (modulo m) j which have DP[j] = true and store all the such (j+arr[i])%m possible subset sum in a boolean array temp, and at the end of iteration over j, we update DP table with temp. Also we add arr[i] to DP ie.. DP[arr[i]%m] = true.
+
+In the end if DP[0] is true then it means YES there exist a subset with sum which is divisible by m, else NO.
+
+*/
+
+// recur solution, generate all subset sum and check for %m
+fun subsetSums( arr : Array<Int>,  l : Int,  r :  Int, sum : Int, m : Int) : Boolean
+{
+    // Check current subset
+    if (l > r)
+    {
+        return sum%m == 0 && sum != 0
+    }
+    return subsetSums(arr, l + 1, r, sum + arr[l], m) || subsetSums(arr, l + 1, r, sum, m)
+
+}
+
+fun DpSubSetSum(arr : Array<Int>, m : Int, n : Int) : Boolean{
+
+    if (n > m) {
+        return true
+    }
+    val DPBoolean = BooleanArray(m)
+    for (i in 0 until n) {
+        if (DPBoolean[0]) {
+            return true
+        }
+        val temBooleanArray = BooleanArray(m)
+        for (j in 0 until m) {
+            if (DPBoolean[j]) {
+                if (!DPBoolean[(j+arr[i])%m]) {
+                    temBooleanArray[(j+arr[i])%m] = true
+                }
+            }
+        }
+        for (j in 0 until m) if (temBooleanArray.get(j)) DPBoolean[j] = true
+        DPBoolean[arr[i]%m] = true
+    }
+    return DPBoolean[0]
+}
+
+
+fun main() {
+    val aa = arrayOf(3,2,7,5)
+   // println(subsetSums(aa, 0, 3, 0,5))
+    println(DpSubSetSum(aa, 11, aa.size ))
+}
