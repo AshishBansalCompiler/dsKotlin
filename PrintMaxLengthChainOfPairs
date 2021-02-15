@@ -1,0 +1,100 @@
+package tictactoe
+
+/*Perfect Sum Problem (Print all subsets with given sum)
+* Given an array of integers and a sum, the task is to print all subsets of given array with sum equal to given sum.
+
+Examples:
+
+Input : arr[] = {2, 3, 5, 6, 8, 10}
+        sum = 10
+Output : 5 2 3
+         2 8
+         10
+
+Input : arr[] = {1, 2, 3, 4, 5}
+        sum = 10
+Output : 4 3 2 1
+         5 3 2
+         5 4 1
+* we have done code for to know if there is any subset or not with given sum. we will use same DP approach to print the
+* sub set
+* arrays
+*/
+
+class PrintAllSubSetSum {
+
+    fun DpSubSetSumOne(aa : IntArray, n : Int, sum: Int) {
+        val booleanDP = Array(n+1) {BooleanArray(sum+1)}
+        booleanDP[0][0] = true
+        for (i in 1 .. n) {
+            booleanDP[i][0] = true
+        }
+        for (i in 1 .. sum) {
+            booleanDP[0][i] = false
+        }
+        for (i in 1 .. n) {
+            for (j in 1 .. sum) {
+                if (aa[i-1] <= j) {
+                    booleanDP[i][j] = booleanDP[i-1][j] || booleanDP[i-1][j-aa[i-1]]
+                } else {
+                    booleanDP[i][j] = booleanDP[i-1][j]
+                }
+            }
+        }
+
+       /* for (i in 0 .. n) {
+            for (j in 0 .. sum) {
+                print("${booleanDP[i][j]} ")
+            }
+            println()
+        }*/
+
+        println()
+        println()
+        println()
+        val list = mutableListOf<Int>()
+        printRecur(aa,booleanDP, list, n, sum)
+    }
+}
+
+fun printAll(list: MutableList<Int>) {
+    for (item in list) {
+        print("$item ")
+    }
+    println()
+}
+
+fun printRecur(aa : IntArray, dpArray : Array<BooleanArray>, list: MutableList<Int>, n : Int, sum: Int) {
+
+    if (n == 1 && sum != 0 && dpArray[1][sum]) {
+        list.add(aa[n-1])
+        printAll(list)
+        list.clear()
+        return
+    }
+    if (n == 1 && sum == 0) {
+        printAll(list)
+        list.clear()
+        return
+    }
+
+    // if it true means we can get sum by excluding this element
+    if (dpArray[n-1][sum]) {
+        val tt = mutableListOf<Int>()
+        tt.addAll(list)
+        printRecur(aa, dpArray, tt, n-1, sum)
+    }
+    if (sum >= aa[n-1] && dpArray[n-1][sum-aa[n-1]]) {
+        list.add(aa[n-1])
+        printRecur(aa, dpArray, list, n-1, sum-aa[n-1])
+    }
+
+}
+
+fun main() {
+    //val array = intArrayOf(2,3,5,6,8,10)
+    val array = intArrayOf(1,2,3,4,5)
+    val sum = 50
+    val printAllSubSetSum = PrintAllSubSetSum()
+    val isThere = printAllSubSetSum.DpSubSetSumOne(array, array.size, sum)
+}
