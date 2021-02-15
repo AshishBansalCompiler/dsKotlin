@@ -1,0 +1,53 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Given an array of N numbers, we need to maximize the sum of selected numbers. At each step, you need to select a number Ai, delete one occurrence of it and delete all occurrences of Ai-1 and Ai+1 (if they exist) in the array. Repeat these steps until the array gets empty. The problem is to maximize the sum of the selected numbers.
+Note: We have to delete all the occureneces of Ai+1 and Ai-1 elements if they are present in the array and not Ai+1 and Ai-1.
+Examples:
+
+
+Input : a[] = {1, 2, 3}
+Output : 4
+Explanation: At first step we select 1, so 1 and
+2 are deleted from the sequence leaving us with 3.
+Then we select 3 from the sequence and delete it.
+So the sum of selected numbers is 1+3 = 4.
+
+
+Input : a[] =  {1, 2, 2, 2, 3, 4}
+Output : 10
+Explanation : Select one of the 2's from the array, so
+2, 2-1, 2+1 will be deleted and we are left with {2, 2, 4},
+since 1 and 3 are deleted. Select 2 in next two steps,
+and then select 4 in the last step.
+We get a sum of 2+2+2+4=10 which is the maximum possible
+
+*/
+
+fun maxSUmtoAmkeArrayEmpty(array : Array<Int>) : Int {
+    var maximumNUmber = array[0]
+    for (i in 1 until array.size) {
+        maximumNUmber = max(maximumNUmber, array[i])
+    }
+    val temp = IntArray(maximumNUmber+1)
+
+    for (i in 0 until array.size) {
+        temp[array[i]]++
+    }
+
+    for (i in 2 .. maximumNUmber) {
+        temp[i] = max(temp[i-1], temp[i-2] + i*temp[i])
+    }
+    return temp[maximumNUmber]
+}
+
+
+fun main() {
+
+    //val array = arrayOf(1, 2, 3)
+    val array = arrayOf(1, 1, 1,1,1,1,1,2)
+    print(maxSUmtoAmkeArrayEmpty(array))
+}
+
+
