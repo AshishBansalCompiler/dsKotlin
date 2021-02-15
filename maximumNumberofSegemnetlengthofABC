@@ -1,0 +1,52 @@
+package tictactoe
+
+import kotlin.math.max
+
+/*Given a positive integer N, find the maximum number of segments of lengths a, b and c that can be formed from N .
+
+Examples :
+
+Input : N = 7, a = 5, b, = 2, c = 5
+Output : 2
+N can be divided into 2 segments of lengths
+2 and 5. For the second example,
+
+Input : N = 17, a = 2, b = 1, c = 3
+Output : 17
+N can be divided into 17 segments of 1 or 8
+segments of 2 and 1 segment of 1. But 17 segments
+of 1 is greater than 9 segments of 2 and 1.
+
+*/
+
+fun finMaxNumberOfSegement(n : Int, a : Int, b : Int , c: Int) {
+
+    val array = Array<Int>(n+1){-1}
+    array[0] = 0
+
+    for (i in 0 until n) {
+        if (array[i] != -1)
+        if (i +a <=n ) {
+            array[i+a] = max(array[i] +1, array[i+a])
+        }
+        if (i +b <=n ) {
+            array[i+b] = max(array[i] +1, array[i+b])
+        }
+        if (i +c <=n ) {
+            array[i+c] = max(array[i] +1, array[i+c])
+        }
+    }
+    for (i in array) {
+        print("$i    ")
+    }
+    println()
+    println()
+    println()
+    print(array[n])
+}
+
+fun main() {
+
+    finMaxNumberOfSegement(7,5,2,5)
+    //finMaxNumberOfSegement(17,2,1,3)
+}
