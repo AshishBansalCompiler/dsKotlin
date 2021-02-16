@@ -1,0 +1,78 @@
+package tictactoe
+
+import kotlin.math.min
+
+/*Given n integers. The task is to minimize the sum of multiplication of all the numbers by taking two adjacent numbers at a time and putting back their sum % 100 till a number is left.
+
+Examples :
+
+Input : 40 60 20
+Output : 2400
+Explanation: There are two possible cases:
+1st possibility: Take 40 and 60, so multiplication=2400
+and put back (60+40) % 100 = 0, making it 0, 20.
+Multiplying 0 and 20 we get 0 so
+multiplication = 2400+0 = 2400. Put back (0+20)%100 = 20.
+2nd possibility: take 60 and 20, so 60*20 = 1200,
+put back (60+20)%100 = 80, making it [40, 80]
+multiply 40*80 to get 3200, so multiplication
+sum = 1200+3200 = 4400. Put back (40+80)%100 = 20
+
+Input : 5 6
+Output : 30
+Explanation: Only possibility is 5*6=30
+
+*/
+
+fun sums(array: Array<Int>, n : Int, last : Int) :  Long {
+
+    var sum : Long = 0
+    for (i in n .. last) {
+        sum = (sum +array[i])%100
+    }
+    return sum
+}
+
+fun minimumcostmultiplying(array: Array<Int>, n : Int, last : Int) : Long {
+
+   if(n == last) {
+       return 0
+   }
+    var min = Long.MAX_VALUE
+   for (k in n until last) {
+      var count = minimumcostmultiplying(array, n , k) + minimumcostmultiplying(array, k+1, last) + (sums(array, n, k)  * sums(array, k+1, last))
+
+       min = min(min, count)
+   }
+    return min
+
+}
+
+fun callfoDPFOrMinCOstmultiplying(temp : Array<Array<Long>> ,array: Array<Int>, start: Int, last : Int) : Long {
+
+    if (start == last) {
+        return 0
+    }
+    if (temp[start][last] != -1.toLong()) {
+        return temp[start][last]
+    }
+    temp[start][last]  = Long.MAX_VALUE
+    for (k in start until last) {
+        temp[start][last] = min(temp[start][last], callfoDPFOrMinCOstmultiplying(temp, array, start,
+           k) + callfoDPFOrMinCOstmultiplying(temp, array, k+1, last)) + (sums(array, start, k) * sums(
+            array, k+1, last))
+    }
+    return temp[start][last]
+}
+
+fun dpMinCostMultiplying(array: Array<Int>) : Long {
+    val temp : Array<Array<Long>> = Array(array.size){Array(array.size) {-1}}
+    return callfoDPFOrMinCOstmultiplying(temp, array, 0, array.size-1)
+}
+
+fun main() {
+    //val array = arrayOf(40 ,60 ,20)
+    val array = arrayOf(5,6)
+    //print(minimumcostmultiplying(array, 0, array.size-1))
+    print(dpMinCostMultiplying(array))
+}
